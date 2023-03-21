@@ -8,8 +8,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
-
-
+from .forms import PostForm
+from .models import TestPost
 '''
 Example Post Format
 {
@@ -34,6 +34,13 @@ def home(request):
     }
     return render(request, "stream/home.html", context)
 
+
+@method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
+class AJPostView(CreateView):
+    model=TestPost
+    form_class = PostForm
+    template_name= 'stream/postForm.html'
+    
 # See if we can filter post here
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class PostListView(ListView):
