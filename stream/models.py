@@ -5,7 +5,6 @@ from django.urls import reverse
 from users.models import Profile
 # Create your models here.
 class Post(models.Model):
-    type="post"
     title = models.CharField(max_length=100)
     content = models.TextField()                               # TextField can have more than 255 characters
     date_posted = models.DateTimeField(default=timezone.now) 
@@ -29,7 +28,7 @@ class Post(models.Model):
 
     def likes(self):
         return self.howManyLike
-    
+        
 class TestPost(models.Model):
     type="post"
     author = models.ForeignKey(Profile, on_delete=models.CASCADE) # If user is deleted, all his/her posts are deleted
