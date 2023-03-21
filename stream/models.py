@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
-from users.models import Profile
+
 # Create your models here.
 class Post(models.Model):
     title = models.CharField(max_length=100)
@@ -28,26 +28,7 @@ class Post(models.Model):
 
     def likes(self):
         return self.howManyLike
-        
-class TestPost(models.Model):
-    type="post"
-    author = models.ForeignKey(Profile, on_delete=models.CASCADE) # If user is deleted, all his/her posts are deleted
-    id= models.CharField(max_length=100, primary_key=True)
-    source = models.CharField(max_length=100)
-    origin = models.CharField(max_length=100)
-    title = models.CharField(max_length=100)
-    # description= models.CharField(max_length=500)
-    image = models.ImageField(upload_to="uploads/post_photo", blank=True, null=True)
-    contentType = "text/plain" #default required=True
-    content = models.TextField()
-    categories = models.CharField( max_length=50, blank=True, null=True)
-    count = models.IntegerField(default=0)
-    comments = models.CharField( max_length=150, blank=True, null=True)
-    # Basically published
-    date_published = models.DateTimeField(default=timezone.now) 
-    visibility = models.CharField(max_length=150)
-    unlisted = models.BooleanField(default=False)
-
+    
 # https://www.youtube.com/watch?v=OuOB9ADT_bo
 # link the 33 video too
 class Comment(models.Model):

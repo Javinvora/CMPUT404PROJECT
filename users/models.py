@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
-# from stream.models import Post
+from stream.models import Post
 import uuid
 
 # Create your models here.
