@@ -13,7 +13,7 @@ class Post(models.Model):
     howManyLike = models.ManyToManyField(User,related_name= "howManyLike")
     image = models.ImageField(upload_to="uploads/post_photo", blank=True, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE) # If user is deleted, all his/her posts are deleted
-    # id= models.CharField(max_length=100, primary_key=True)
+    # we do not need to create an id separately because the Django models create it automiatically.
     source = models.CharField(max_length=100)
     origin = models.CharField(max_length=100)
     contentType = "text/plain" #default required=True
