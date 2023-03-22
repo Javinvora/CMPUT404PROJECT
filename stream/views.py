@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -8,8 +9,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
-
-
+from django.views.generic.edit import CreateView
+from django.forms import RadioSelect
 '''
 Example Post Format
 {
@@ -35,7 +36,27 @@ def home(request):
     return render(request, "stream/home.html", context)
 
 # See if we can filter post here
+class PostForm(forms.ModelForm):
+    visibilityOptions = (
+        ('public', 'Public'),
+        ('private', 'Private'),
+    )
+    visibility = forms.ChoiceField(widget=forms.RadioSelect, choices=visibilityOptions)
+
+
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'image', 'visibility', 'date_posted']
+
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
 class PostListView(ListView):
     model = Post
     template_name = "stream/home.html"
@@ -46,15 +67,28 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
 
-@method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
-class PostCreateView(LoginRequiredMixin, CreateView):
-    model = Post
-    fields = ["title", "content","image"]
+# @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
+# class PostCreateView(LoginRequiredMixin, CreateView):
+#     model = Post
+#     fields = ['title', 'content', 'image', 'visibility' ,'date_posted']
+#     # visibilityChoices = [('Public', 'Public'), ('Private', 'Private')]
+#     # widgets = {
+#     #     'visibility': forms.Select(choices=visibilityChoices, attrs={'class': 'form-control'}),          
+#     # }
 
-    # Set post author to current login user
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
+#     visibilityOptions = [
+#         {'label': 'Public', 'value': 'public'},
+#         {'label': 'Private', 'value': 'private'},
+#     ]
+
+#     widgets = {
+#         'visibility': forms.RadioSelect(choices=[(o['value'], o['label']) for o in visibilityOptions]),
+#     }
+
+#     # Set post author to current login user
+#     def form_valid(self, form):
+#         form.instance.author = self.request.user
+#         return super().form_valid(form)
     
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
