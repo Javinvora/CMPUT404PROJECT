@@ -71,7 +71,7 @@ class PostDetailView(DetailView):
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ["title", "content","image"]
+    form_class = PostForm
 
     # Set post author to current login user
     def form_valid(self, form):

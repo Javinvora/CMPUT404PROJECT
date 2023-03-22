@@ -9,7 +9,6 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()                               # TextField can have more than 255 characters
     date_posted = models.DateTimeField(default=timezone.now) 
-    '''https://www.youtube.com/watch?v=xqFM6ykQEwo'''
     howManyLike = models.ManyToManyField(User,related_name= "howManyLike")
     image = models.ImageField(upload_to="uploads/post_photo", blank=True, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE) # If user is deleted, all his/her posts are deleted
