@@ -5,6 +5,7 @@ from django.urls import reverse
 
 # Create your models here.
 class Post(models.Model):
+    type="post"
     title = models.CharField(max_length=100)
     content = models.TextField()                               # TextField can have more than 255 characters
     date_posted = models.DateTimeField(default=timezone.now) 
@@ -12,8 +13,16 @@ class Post(models.Model):
     howManyLike = models.ManyToManyField(User,related_name= "howManyLike")
     image = models.ImageField(upload_to="uploads/post_photo", blank=True, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE) # If user is deleted, all his/her posts are deleted
-
-
+    # id= models.CharField(max_length=100, primary_key=True)
+    source = models.CharField(max_length=100)
+    origin = models.CharField(max_length=100)
+    contentType = "text/plain" #default required=True
+    categories = models.CharField( max_length=50, blank=True, null=True)
+    count = models.IntegerField(default=0)
+    comments = models.CharField( max_length=150, blank=True, null=True)
+    visibility = models.CharField(max_length=150, blank=True, null=True)
+    unlisted = models.BooleanField(default=False)
+    
     def __str__(self):
         return (
             f"{self.author}"
