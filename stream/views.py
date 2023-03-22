@@ -67,28 +67,6 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
 
-# @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
-# class PostCreateView(LoginRequiredMixin, CreateView):
-#     model = Post
-#     fields = ['title', 'content', 'image', 'visibility' ,'date_posted']
-#     # visibilityChoices = [('Public', 'Public'), ('Private', 'Private')]
-#     # widgets = {
-#     #     'visibility': forms.Select(choices=visibilityChoices, attrs={'class': 'form-control'}),          
-#     # }
-
-#     visibilityOptions = [
-#         {'label': 'Public', 'value': 'public'},
-#         {'label': 'Private', 'value': 'private'},
-#     ]
-
-#     widgets = {
-#         'visibility': forms.RadioSelect(choices=[(o['value'], o['label']) for o in visibilityOptions]),
-#     }
-
-#     # Set post author to current login user
-#     def form_valid(self, form):
-#         form.instance.author = self.request.user
-#         return super().form_valid(form)
     
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
