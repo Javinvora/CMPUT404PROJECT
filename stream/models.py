@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+from users.models import Profile
+import uuid
 
 # Create your models here.
 class Post(models.Model):
@@ -38,17 +40,23 @@ class Post(models.Model):
     def likes(self):
         return self.howManyLike
     
-# https://www.youtube.com/watch?v=OuOB9ADT_bo
-# link the 33 video too
+
+
 class Comment(models.Model):
+    # In API
+    type = "comment"
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField()
+    contentType = models.TextField(default = "type placeholder")
+    published = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    # id?
+    # Not in API, tentative to change
     main_post = models.ForeignKey(Post, related_name = "main_comments", on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    # they are just big boxes
-    body = models.TextField()
-    main_date = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):
-        return '%s  : %s' % (self.main_post.title, self.main_name)
+        return '%s  : %s' % (self.main_post.title, self.comment)
     
     def get_absolute_url(self):
         return reverse("stream-home")

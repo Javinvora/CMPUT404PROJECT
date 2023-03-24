@@ -93,10 +93,11 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
-    fields = ["name", "body"]
+    fields = ["comment"]
 
     # Set post author to current login user
     def form_valid(self, form):
+        form.instance.author = self.request.user
         form.instance.main_post_id = self.kwargs['pk']
         return super().form_valid(form)
     

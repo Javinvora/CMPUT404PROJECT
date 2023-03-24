@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers, serializers, viewsets
 from users.models import Profile
-from stream.models import Post
+from stream.models import Post, Comment
 
 
 # Author API
@@ -34,7 +34,7 @@ class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = AuthorSerializer
 
-
+# Post API
 class PostSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
 
@@ -48,10 +48,23 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+# Comment API
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+
+    class Meta:
+        model = Comment
+        fields = ['type', 'author', 'comment', 'contentType', 'published', 'id']
+        
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
 # API router
 router = routers.DefaultRouter()
 router.register(r'authors', AuthorViewSet)
 router.register(r'posts', PostViewSet)
+router.register(r'comments', CommentViewSet)
 
 
 

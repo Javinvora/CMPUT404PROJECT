@@ -24,10 +24,10 @@
                 <hr>
             {% else %}
                 {% for comment in post.main_comments.all %}
-                    <small class="text-danger">{{ comment.name }}</small>
-                    <small class="text-muted">{{ comment.main_date}}</small>
+                    <small class="text-danger">{{ comment.author.username }}</small>
+                    <small class="text-muted">{{ comment.published}}</small>
                     <br/>
-                    {{ comment.body }}
+                    {{ comment.comment }}
                     <hr>
                 {% endfor %}
                 <a href = "{%url 'post-comments' post.id%}"> Comment</a>

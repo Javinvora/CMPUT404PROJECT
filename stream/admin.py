@@ -5,3 +5,4 @@ from .models import Post, mainlikes, Comment
 admin.site.register(mainlikes)
 admin.site.register(Post)
 admin.site.register(Comment)
+
