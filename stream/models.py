@@ -21,6 +21,7 @@ class Post(models.Model):
     comments = models.CharField( max_length=150, blank=True, null=True)
     visibility = models.CharField(max_length=150, blank=True, null=True)
     unlisted = models.BooleanField(default=False)
+    published = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return (
