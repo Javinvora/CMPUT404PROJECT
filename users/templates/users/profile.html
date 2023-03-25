@@ -1,13 +1,25 @@
 {% extends "stream/base-no-side-bar.html" %}
 {% load crispy_forms_tags %}
-
 {% block content %}
+    
+    
+
     <div class="content-section">
         <div class="media">
-            <img class="rounded-circle account-img" src={{ user.profile.profileImage.url }}>
+            <img class="rounded-circle account-img" src="{{ user.profile.profileImage}}">
             <div class="media-body">
-                <h2 class="account-heading"> {{ user.username }} </h2>
-                {% comment %} <p class="text-secondary"> {{ user.email }} </p> {% endcomment %}
+                <h2 class="account-heading"> {{ user.username}}'s Profile </h2>
+                 <div class="d-flex justify-content-end">
+                    <a href="{% url 'update' %}"><button type="button" class="btn btn-outline-primary" data-mdb-ripple-color="dark">Edit Profile </button></a>
+                    <br>
+                    {% comment %} Once follow if clicked a friend request is sent {% endcomment %}
+                    <form method="POST">
+                     <input type="hidden" name="type" value="follow">
+                    <input type="hidden" name="profile_id" value={{user.profile.id}}>
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary mx-2">Follow</button>
+                    </form>                
+                </div>
             </div>
         </div>
         {% if user.profile.posts%}
@@ -22,17 +34,5 @@
             </div><br/><br/>
             {%endfor%}
     {%endif%}
-        <!-- FORM HERE -->
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Profile Info</legend>
-                {{ u_form|crispy }}
-                {{ p_form|crispy }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Update</button>
-            </div>
-        </form>
     </div>
 {% endblock content %}

@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from PIL import Image
 from stream.models import Post
 import uuid
+from django.conf import settings
+from django.utils import timezone
+
+
 
 # Create your models here.
 class Profile(models.Model):
@@ -32,3 +36,13 @@ class Profile(models.Model):
             new_size = (300, 300)
             img.thumbnail(new_size)
             img.save(self.profileImage.path)
+
+class FriendRequest(models.Model):
+    type='follow'
+    summary= models.CharField(max_length=500, blank= True, null= True)
+    actor= models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='actor')
+    object= models.ForeignKey(Profile,on_delete=models.CASCADE, related_name='object')
+    
+class Inbox(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='inbox')
+    friend_requests = models.ManyToManyField(FriendRequest, related_name='recipient_inboxes')

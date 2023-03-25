@@ -3,6 +3,7 @@ from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from stream.models import Post 
+from .models import FriendRequest, Inbox, Profile
 '''
 messages.debug
 messages.info
@@ -27,6 +28,10 @@ def register(request):
 
 @login_required
 def profile(request):
+    return render(request, "users/profile.html")
+
+@login_required
+def update(request):
     if request.method == "POST":
         posts = Post.objects.filter()
         u_form = UserUpdateForm(request.POST, instance=request.user)
@@ -35,7 +40,7 @@ def profile(request):
             u_form.save()
             p_form.save()
             messages.success(request, f"Your profile has been updated!")
-            return redirect("profile")
+            return redirect(profile)
 
     else:
         u_form = UserUpdateForm(instance=request.user)
@@ -46,4 +51,18 @@ def profile(request):
         "p_form": p_form,
     }
 
-    return render(request, "users/profile.html", context)
+    return render(request, "users/update.html", context)
+
+
+def inbox(request):
+    context={}
+    if request.method == "POST":
+        # if type == 'follow':
+            profile_id = request.POST.get('profile_id')
+            actor= Profile.objects.get(pk=profile_id)
+            object= Profile.objects.get(pk=request.user.profile.id)
+            summary = f"{actor} wants to follow {object}"
+            friend_request= FriendRequest.objects.create(summary=summary, actor = actor, object= object)
+            inbox = Inbox.objects.create(profile=object)
+            inbox.friend_requests.add(friend_request)
+    return render(request, 'users/inbox.html')
