@@ -34,10 +34,18 @@ class PostForm(forms.ModelForm):
     )
     visibility = forms.ChoiceField(widget=forms.RadioSelect, choices=visibilityOptions)
 
+    contentTypeOptions = (
+        ('text/markdown -- common mark', 'text/markdown -- common mark'),
+        ('text/plain -- UTF-8', 'text/plain -- UTF-8'),
+        ('application/base64', 'application/base64'),
+        (' image/png;base64', ' image/png;base64'),
+        ('image/jpeg;base64', 'image/jpeg;base64'),
+    )
+    contentType = forms.ChoiceField(widget=forms.RadioSelect, choices=contentTypeOptions)
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'image', 'visibility', 'date_posted']
+        fields = ['title', 'description','contentType', 'content', 'image', 'categories','visibility', 'published']
 
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -53,7 +61,7 @@ class PostListView(ListView):
     model = Post
     template_name = "stream/home.html"
     context_object_name = "posts"
-    ordering = ['-date_posted']
+    ordering = ['-published']
 
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class PostDetailView(DetailView):
