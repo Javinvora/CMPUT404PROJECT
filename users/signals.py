@@ -21,6 +21,7 @@ def create_profile(sender, instance, created, **kwargs):
         profile.displayName = instance.username
         profile.github = "https://github.com/" + instance.first_name
         
+        
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()

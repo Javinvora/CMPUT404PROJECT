@@ -11,15 +11,6 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.forms import RadioSelect
-'''
-Example Post Format
-{
-    "author": "Isaac",
-    "title": "Post 1",
-    "content": "First post content",
-    "date_posted": "Feb. 25, 2023, 6:05 p.m.",
-}
-'''
 
 # render(request, page to render, context)
 
@@ -65,6 +56,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+
 class PostListView(ListView):
     model = Post
     template_name = "stream/home.html"
@@ -109,10 +101,11 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
-    fields = ["name", "body"]
+    fields = ["comment"]
 
     # Set post author to current login user
     def form_valid(self, form):
+        form.instance.author = self.request.user
         form.instance.main_post_id = self.kwargs['pk']
         return super().form_valid(form)
     
