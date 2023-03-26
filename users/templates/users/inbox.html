@@ -1,22 +1,24 @@
 {% extends "stream/base-no-side-bar.html" %}
 
 {% block content %}
-  <table class="table">
-    <thead class="table-dark">
-      <tr>
-        <th scope="col">Request Type</th>
-        <th scope="col">Summary</th>
-      </tr>
-    </thead>
-    <tbody>
-        <!-- inbox.html template -->
-        <h1>{{user.username}}'s Inbox</h1>
-        {% if summary %}
-        <p>{{ summary }}</p>
-        {% endif %}
-        {% if username %}
-        <p>{{ username }}</p>
-        {% endif %}
-    </tbody>
-  </table>
+  <h2>Inbox</h2>
+  {% if request.user.profile.inbox.all %}
+    {% for friend_request in request.user.profile.inbox.all.first.friend_requests.all %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ friend_request.type }} request:</h5>
+          <p class="card-text">{{ friend_request.actor }} wants to follow you</p>
+          <form method="POST">
+            {% csrf_token %}
+            <div class="btn-group" role="group">
+              <button type="submit" class="btn btn-success mx-2" name="accept" value="{{ friend_request.id }}">Accept</button>
+              <button type="submit" class="btn btn-danger" name="decline" value="{{ friend_request.id }}">Decline</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You have no friend requests</p>
+  {% endif %}
 {% endblock content %}

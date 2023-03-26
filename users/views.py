@@ -55,23 +55,59 @@ def update(request):
 
 
 def inbox(request):
+    # context={}
+    # if request.method == "POST":
+    #     friend_request_id = request.POST.get("accept") or request.POST.get("decline")
+    #     print(friend_request_id)
+    #     request_type = request.POST.get('type')
+    #     #ASK BIGYAN ABOUT VALIDATING FRIEND REQUEST
+    #     #checks request type making sure it's a follow request
+    #     if request_type == 'follow':           
+    #         profile_id = request.POST.get('profile_id')
+    #         actor= Profile.objects.get(pk=profile_id)
+    #         object= Profile.objects.get(pk=request.user.profile.id)
+    #         summary=  f"{actor} wants to follow {object}"
+    #         friend_request= FriendRequest.objects.create(summary=summary, actor = actor, object= object)
+    #         inbox = Inbox.objects.create(profile=object)
+    #         inbox.friend_requests.add(friend_request)
+    #         context={
+    #             "summary": summary,
+    #             "username": actor,
+    #         }
+    #         return redirect(profile)
+    # else:
+    #         return render(request, 'users/inbox.html',context)
+
     context={}
     if request.method == "POST":
+        friend_request_id = request.POST.get("accept") or request.POST.get("decline")
+        print(friend_request_id)
         request_type = request.POST.get('type')
-        #ASK BIGYAN ABOUT VALIDATING FRIEND REQUEST
+        context={}
         #checks request type making sure it's a follow request
-        if request_type == 'follow':           
+        if request_type == 'follow':
             profile_id = request.POST.get('profile_id')
             actor= Profile.objects.get(pk=profile_id)
             object= Profile.objects.get(pk=request.user.profile.id)
             summary=  f"{actor} wants to follow {object}"
-            friend_request= FriendRequest.objects.create(summary=summary, actor = actor, object= object)
-            inbox = Inbox.objects.create(profile=object)
-            inbox.friend_requests.add(friend_request)
-            context={
-                "summary": summary,
-                "username": actor,
+            friend_request_exists = FriendRequest.objects.filter(actor=actor, object=object).exists()
+            if friend_request_exists:
+                messages.warning(request, f"You already have sent a friend request to {object}!")
+            else:
+                friend_request= FriendRequest.objects.create(summary=summary, actor=actor, object=object)
+                inbox = Inbox.objects.create(profile=object)
+                inbox.friend_requests.add(friend_request)
+                context = {
+                    'friend_requests': friend_requests
+                }
+            return redirect('profile')
+        
+        else:
+            inbox = Inbox.objects.get(profile=request.user.profile)
+            friend_requests = inbox.friend_requests.all()
+            context = {
+                'friend_requests': friend_requests
             }
-            return redirect(profile)
-    else:
-            return render(request, 'users/inbox.html',context)
+            return render(request, 'users/inbox.html', context)
+    return render(request, 'users/inbox.html', context)
+
