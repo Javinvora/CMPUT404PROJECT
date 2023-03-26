@@ -58,7 +58,7 @@ class Comment(models.Model):
     main_post = models.ForeignKey(Post, related_name = "main_comments", on_delete=models.CASCADE)
 
     def __str__(self):
-        return '%s  : %s' % (self.main_post.title, self.main_name)
+        return '%s  : %s' % (self.main_post.title, self.comment)
     
     def get_absolute_url(self):
         return reverse("stream-home")
