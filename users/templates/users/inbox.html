@@ -1,21 +1,22 @@
 {% extends "stream/base-no-side-bar.html" %}
-<div class="row">
-  <div class="col-sm-6 mb-3 mb-sm-0">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-  </div>
-</div>
+
+{% block content %}
+  <table class="table">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">Request Type</th>
+        <th scope="col">Summary</th>
+      </tr>
+    </thead>
+    <tbody>
+        <!-- inbox.html template -->
+        <h1>{{user.username}}'s Inbox</h1>
+        {% if summary %}
+        <p>{{ summary }}</p>
+        {% endif %}
+        {% if username %}
+        <p>{{ username }}</p>
+        {% endif %}
+    </tbody>
+  </table>
+{% endblock content %}

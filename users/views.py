@@ -57,12 +57,21 @@ def update(request):
 def inbox(request):
     context={}
     if request.method == "POST":
-        # if type == 'follow':
+        request_type = request.POST.get('type')
+        #ASK BIGYAN ABOUT VALIDATING FRIEND REQUEST
+        #checks request type making sure it's a follow request
+        if request_type == 'follow':           
             profile_id = request.POST.get('profile_id')
             actor= Profile.objects.get(pk=profile_id)
             object= Profile.objects.get(pk=request.user.profile.id)
-            summary = f"{actor} wants to follow {object}"
+            summary=  f"{actor} wants to follow {object}"
             friend_request= FriendRequest.objects.create(summary=summary, actor = actor, object= object)
             inbox = Inbox.objects.create(profile=object)
             inbox.friend_requests.add(friend_request)
-    return render(request, 'users/inbox.html')
+            context={
+                "summary": summary,
+                "username": actor,
+            }
+            return redirect(profile)
+    else:
+            return render(request, 'users/inbox.html',context)

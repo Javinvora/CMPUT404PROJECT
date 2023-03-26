@@ -13,9 +13,9 @@
                     <a href="{% url 'update' %}"><button type="button" class="btn btn-outline-primary" data-mdb-ripple-color="dark">Edit Profile </button></a>
                     <br>
                     {% comment %} Once follow if clicked a friend request is sent {% endcomment %}
-                    <form method="POST">
+                    <form method="POST" action="{% url 'inbox' %}">
                      <input type="hidden" name="type" value="follow">
-                    <input type="hidden" name="profile_id" value={{user.profile.id}}>
+                    <input type="hidden" name="profile_id" value="{{user.profile.id}}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary mx-2">Follow</button>
                     </form>                
