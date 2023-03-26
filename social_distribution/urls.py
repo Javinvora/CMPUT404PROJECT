@@ -1,5 +1,4 @@
 """social_distribution URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
 Examples:
@@ -21,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers, serializers, viewsets
 from users.models import Profile
+from stream.models import Post, Comment
 
 
 # Author API
@@ -33,9 +33,37 @@ class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = AuthorSerializer
 
+# Post API
+class PostSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+
+    class Meta:
+        model = Post
+        # description, commentsSrc is missing
+        fields = ['type', 'title', 'id', 'source', 'origin', 'contentType', 'content', 
+                  'author', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted']
+        
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+# Comment API
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+
+    class Meta:
+        model = Comment
+        fields = ['type', 'author', 'comment', 'contentType', 'published', 'id']
+        
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
 # API router
 router = routers.DefaultRouter()
 router.register(r'authors', AuthorViewSet)
+router.register(r'posts', PostViewSet)
+router.register(r'comments', CommentViewSet)
 
 
 
