@@ -2,7 +2,7 @@
 {% load md2 %}
 {% block content %}
     <article class="media content-section">
-        <img class="rounded-circle account-img" src={{ user.profile.profileImage.url }} width="100" height="100">
+        <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
         <div class="media-body">
         <div class="article-metadata">
             <a class="mr-2" href="#">{{ object.author }}</a>
@@ -15,7 +15,7 @@
             </div>
         </div>
         <h2 class="article-title">{{ object.title }}</h2>
-        <p class="article-content">{{ object.content|urlize|markdown }}</p>
+        <p class="article-content">{{ object.content|markdown|urlize }}</p>
         {% if post.image %}
             <img src="{{post.image.url}}" class="post-image" width="60%" height="60%"/>
         {% endif %}
