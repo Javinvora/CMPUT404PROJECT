@@ -8,7 +8,7 @@ class Profile(models.Model):
     # In API
     type='author'
     id= models.CharField(max_length=100, primary_key=True)
-    host= models.CharField(max_length=100,default= 'host.default')
+    host= models.CharField(max_length=100,default= 'localhost:8000/')
     displayName= models.CharField(max_length=100, blank=True, null=True)
     url= models.CharField(max_length=100,blank= True)
     github= models.CharField(max_length=100, blank=True, null=True)    

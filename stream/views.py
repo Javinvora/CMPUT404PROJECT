@@ -105,8 +105,15 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     # Set post author to current login user
     def form_valid(self, form):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        # Set post author to current login user
         form.instance.author = self.request.user
-        form.instance.main_post_id = self.kwargs['pk']
+        # Save the comment object
+        response = super().form_valid(form)
+        # Add the comment to the post's comments field
+        post.comments.add(self.object)
+        post.count += 1
+        post.save()
         return super().form_valid(form)
     
     

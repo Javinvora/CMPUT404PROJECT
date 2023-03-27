@@ -17,7 +17,7 @@ def is_valid_uuid(val):
 def create_profile(sender, instance, created, **kwargs):
     if created:
         profile = Profile.objects.create(user=instance,id=str(uuid.uuid4()))
-        profile.url = "host.placeholder/author/" + str(profile.id) + "/"
+        profile.url = "localhost:8000/author/" + str(profile.id) + "/"
         profile.displayName = instance.username
         profile.github = "https://github.com/" + instance.first_name
         
