@@ -15,7 +15,7 @@
             </div>
         </div>
         <h2 class="article-title">{{ object.title }}</h2>
-        <p class="article-content">{{ object.content|markdown|urlize }}</p>
+        <p class="article-content">{{ object.content|urlize|markdown }}</p>
         {% if post.image %}
             <img src="{{post.image.url}}" class="post-image" width="60%" height="60%"/>
         {% endif %}
