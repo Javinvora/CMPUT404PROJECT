@@ -9,10 +9,10 @@
                 <a class="mr-2" href="#">{{ post.author }}</a>
                 <small class="text-muted">{{ post.date_posted }}</small>
             </div>
-            <h2><a class="article-title" href="{% url "post-detail" post.id %}">{{ post.title }}</a></h2>
+            <h2><a class="article-title" href="{% url "post-detail" pk=post.id %}">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
             {% if post.image %}
-                <img src="{{post.image.url}}" class="post-image"/>
+                <img src="{{post.image.url}}" class="post-image" width="60%" height="60%"/>
              {% endif %}
             <hr>
             <h3>Comments: </h2>
@@ -24,16 +24,14 @@
                 <hr>
             {% else %}
                 {% for comment in post.main_comments.all %}
-                    <small class="text-danger">{{ comment.name }}</small>
-                    <small class="text-muted">{{ comment.main_date}}</small>
+                    <small class="text-danger">{{ comment.author.username }}</small>
+                    <small class="text-muted">{{ comment.published}}</small>
                     <br/>
-                    {{ comment.body }}
+                    {{ comment.comment }}
                     <hr>
                 {% endfor %}
                 <a href = "{%url 'post-comments' post.id%}"> Comment</a>
             {% endif %}
-            <p class="article-content">{{ post.content|markdown|urlize }}</p>
-
             </div>
         </article>
     {% endfor %}

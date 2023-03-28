@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers, serializers, viewsets
 from users.models import Profile, Inbox
-
+from stream.models import Post, Comment
 
 # Author API
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
@@ -32,10 +32,36 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = AuthorSerializer
+# Post API
+class PostSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+
+    class Meta:
+        model = Post
+        # description, commentsSrc is missing
+        fields = ['type', 'title', 'id', 'source', 'origin', 'contentType', 'content', 
+                  'author', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted']
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+# Comment API
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+
+    class Meta:
+        model = Comment
+        fields = ['type', 'author', 'comment', 'contentType', 'published', 'id']
+        
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
 # API router
 router = routers.DefaultRouter()
 router.register(r'authors', AuthorViewSet)
+router.register(r'posts', PostViewSet)
+router.register(r'comments', CommentViewSet)
 
 
 
@@ -46,9 +72,9 @@ urlpatterns = [
     path("login/", auth_views.LoginView.as_view(template_name="users/login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(template_name="users/logout.html"), name="logout"),
     path('profile/', user_views.profile, name="profile"),
-    # path('inbox/', user_views.inbox, name="inbox"),
     path('profile/update.html', user_views.update, name="update"),
     path('inbox/', user_views.inbox, name='inbox'),
+    path('inbox/accept', user_views.accept, name='accept'),
     path("api/", include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace = 'rest_framework')),
     

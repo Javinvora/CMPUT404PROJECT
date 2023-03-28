@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -8,17 +9,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
-
-
-'''
-Example Post Format
-{
-    "author": "Isaac",
-    "title": "Post 1",
-    "content": "First post content",
-    "date_posted": "Feb. 25, 2023, 6:05 p.m.",
-}
-'''
+from django.views.generic.edit import CreateView
+from django.forms import RadioSelect
 
 # render(request, page to render, context)
 
@@ -35,31 +27,51 @@ def home(request):
     return render(request, "stream/home.html", context)
 
 # See if we can filter post here
+class PostForm(forms.ModelForm):
+    visibilityOptions = (
+        ('public', 'Public'),
+        ('private', 'Private'),
+    )
+    visibility = forms.ChoiceField(widget=forms.RadioSelect, choices=visibilityOptions)
+
+    contentTypeOptions = (
+        ('text/markdown -- common mark', 'text/markdown -- common mark'),
+        ('text/plain -- UTF-8', 'text/plain -- UTF-8'),
+        ('application/base64', 'application/base64'),
+        (' image/png;base64', ' image/png;base64'),
+        ('image/jpeg;base64', 'image/jpeg;base64'),
+    )
+    contentType = forms.ChoiceField(widget=forms.RadioSelect, choices=contentTypeOptions)
+
+    class Meta:
+        model = Post
+        fields = ['title', 'description','contentType', 'content', 'image', 'categories','visibility', 'published']
+
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
 class PostListView(ListView):
     model = Post
     template_name = "stream/home.html"
     context_object_name = "posts"
-    ordering = ['-date_posted']
+    ordering = ['-published']
 
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class PostDetailView(DetailView):
     model = Post
 
-@method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
-class PostCreateView(LoginRequiredMixin, CreateView):
-    model = Post
-    fields = ["title", "content","image"]
-
-    # Set post author to current login user
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
     
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ["title", "content","image"]
+    form_class = PostForm
 
     # Set post author to current login user
     def form_valid(self, form):
@@ -89,10 +101,11 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
-    fields = ["name", "body"]
+    fields = ["comment"]
 
     # Set post author to current login user
     def form_valid(self, form):
+        form.instance.author = self.request.user
         form.instance.main_post_id = self.kwargs['pk']
         return super().form_valid(form)
     
@@ -105,17 +118,13 @@ def about(request):
     post = get_object_or_404(Post, id = request.POST.get('post_id'))
     post.howManyLike.add(request.user)
     return HttpResponseRedirect(reverse('post-detail', args = [str(pk)]))
-
     mainuser = request.user
     print(post.id)
     if (request.method == 'GET'):
         id_post = request.get('id_post')
         post_post = Post.objects.get(id='id_post')
-
         if mainuser in post_post.howManyLike.all():
             post_post.remove(mainuser)
         else:
             post_post.add(mainuser)
-
     return redirect('stream:stream-home')''' 
-

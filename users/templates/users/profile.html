@@ -16,9 +16,9 @@
                     <form method="POST" action="{% url 'inbox' %}">
                      <input type="hidden" name="type" value="follow">
                     <input type="hidden" name="profile_id" value="{{user.profile.id}}">
-                    {% csrf_token %}
+                    {% comment %} {% csrf_token %} {% endcomment %}
                     <button type="submit" class="btn btn-primary mx-2">Follow</button>
-                    </form>                
+                    </form> 
                 </div>
             </div>
         </div>

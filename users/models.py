@@ -9,6 +9,7 @@ from django.utils import timezone
 
 
 # Create your models here.
+
 class Profile(models.Model):
     # In API
     type='author'
@@ -21,7 +22,7 @@ class Profile(models.Model):
     
     # Not in API
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    follows = models.ManyToManyField("self", related_name="followed_by", symmetrical= False, blank= True )
+    follows = models.ManyToManyField('self', related_name="followed_by", symmetrical= False, blank= True )
 
 
     def __str__(self):
@@ -36,7 +37,12 @@ class Profile(models.Model):
             new_size = (300, 300)
             img.thumbnail(new_size)
             img.save(self.profileImage.path)
-
+            
+class Follower(models.Model):
+    type='followers'
+    items = models.ManyToManyField(Profile, related_name='user_follower')
+       
+   
 class FriendRequest(models.Model):
     type='follow'
     summary= models.CharField(max_length=500, blank= True, null= True)
