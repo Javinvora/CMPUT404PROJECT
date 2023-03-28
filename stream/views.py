@@ -1,18 +1,39 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from django.urls import reverse_lazy, reverse 
-from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
-from django.forms import RadioSelect
 
-# render(request, page to render, context)
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.http import JsonResponse
+
+def obtain_token(request):
+    if request.method == 'GET':
+        username = request.GET.get('username')
+        password = request.GET.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            refresh = RefreshToken.for_user(user)
+            return JsonResponse({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token)
+            })
+        else:
+            return JsonResponse({
+                'error': 'Invalid credentials'
+            })
+    else:
+        return JsonResponse({
+            'error': 'Invalid method'
+        })
+
 
 @user_passes_test(lambda u: not u.is_authenticated, login_url='stream-home')
 def welcome(request):
@@ -120,22 +141,3 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 @login_required
 def about(request):
     return render(request, "stream/about.html", {'title': 'About'})
-
-'''def post_liked(request, pk):
-    post = get_object_or_404(Post, id = request.POST.get('post_id'))
-    post.howManyLike.add(request.user)
-    return HttpResponseRedirect(reverse('post-detail', args = [str(pk)]))
-
-    mainuser = request.user
-    print(post.id)
-    if (request.method == 'GET'):
-        id_post = request.get('id_post')
-        post_post = Post.objects.get(id='id_post')
-
-        if mainuser in post_post.howManyLike.all():
-            post_post.remove(mainuser)
-        else:
-            post_post.add(mainuser)
-
-    return redirect('stream:stream-home')''' 
-
