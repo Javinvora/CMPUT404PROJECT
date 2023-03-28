@@ -30,9 +30,10 @@ def register(request):
     return render(request, 'users/register.html', {"form": form})
 
 @login_required
-def profile(request):
-    return render(request, "users/profile.html")
-
+def profile(request, id):
+    author = get_object_or_404(Profile, id=id)
+    return render(request, 'users/profile.html', {'author': author})
+    
 @login_required
 def followers(request):
     return render(request, "users/followers.html")
@@ -79,7 +80,7 @@ def inbox(request):
                 "summary": summary,
                 "username": actor,
             }
-            return redirect(profile)
+            return redirect(profile,profile_id)
     else:
             return render(request, 'users/inbox.html',context)
 
@@ -87,7 +88,7 @@ def inbox(request):
 @csrf_exempt        
 def accept(request):
     if request.method == 'POST':
-        profile_id = request.POST.get('profile_id')
+        profile_id = request.POST.get('profile_id')        
         delete_request_id = request.POST.get('delete')
         friend_request_id = request.POST.get('accept')
         friend_profile = get_object_or_404(Profile, id=profile_id)

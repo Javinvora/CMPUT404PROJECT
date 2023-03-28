@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
-from stream.models import Post
 import uuid
 from django.conf import settings
 from django.utils import timezone
@@ -26,7 +25,7 @@ class Profile(models.Model):
 
 
     def __str__(self):
-        return f"{self.user.username} Profile"
+        return self.user.username
 
     # Run after model is saved
     def save(self, *args, **kwargs):

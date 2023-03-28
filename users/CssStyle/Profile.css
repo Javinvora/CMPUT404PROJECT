@@ -4,8 +4,8 @@ body {
     font-size: 16px;
 }
 
-.content-section {
-    background-image: linear-gradient(to bottom, #EDEEF7, #F8F9FA);
+.contentsection {
+    background-image: linear-gradient(to bottom, #EDEEF7, #2078d0);
     background-size: cover;
 }
 .media {

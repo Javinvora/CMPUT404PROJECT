@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 from rest_framework import routers, serializers, viewsets
 from users.models import Profile, Inbox
 from stream.models import Post, Comment
-
+import uuid
 # Author API
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -32,22 +32,10 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = AuthorSerializer
-# Post API
-class PostSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
-
-    class Meta:
-        model = Post
-        # description, commentsSrc is missing
-        fields = ['type', 'title', 'id', 'source', 'origin', 'contentType', 'content', 
-                  'author', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted']
-class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-
+    
 # Comment API
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+    author = AuthorSerializer()
 
     class Meta:
         model = Comment
@@ -56,6 +44,21 @@ class CommentSerializer(serializers.ModelSerializer):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    
+# Post API
+class PostSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer()
+    comments = CommentSerializer(many=True)
+
+    class Meta:
+        model = Post
+        fields = ('id', 'author', 'title', 'source', 'origin', 'contentType', 'content', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted')
+        
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+
 
 # API router
 router = routers.DefaultRouter()
@@ -71,7 +74,7 @@ urlpatterns = [
     path("register/", user_views.register, name="register"),
     path("login/", auth_views.LoginView.as_view(template_name="users/login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(template_name="users/logout.html"), name="logout"),
-    path('profile/', user_views.profile, name="profile"),
+    path('profile/<uuid:id>/', user_views.profile, name='profile'),
     path('profile/update.html', user_views.update, name="update"),
     path('profile/followers.html', user_views.followers, name="followers"),
     path('inbox/', user_views.inbox, name='inbox'),
