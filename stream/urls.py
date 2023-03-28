@@ -5,7 +5,6 @@ from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView,
 urlpatterns = [
     path('', PostListView.as_view(), name='stream-home'),
     path('post/<uuid:pk>/', PostDetailView.as_view(), name='post-detail'),
-    # path('post/<int:pk>/liked',post_liked, name='post-liked'), 
     path('post/<uuid:pk>/edit/', PostUpdateView.as_view(), name='post-update'),
     path('post/<uuid:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
     path('post/<uuid:pk>/comment/', CommentCreateView.as_view(), name='post-comments'),

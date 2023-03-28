@@ -16,7 +16,7 @@
         <div style="display: flex; justify-content: space-between;">
         <a href="{% url 'post-detail' pk=post.id %}" style="text-decoration: none; color:black; ">{{ post.title }}</a>
         <div style="margin-left: auto;">
-            {% if object.author == user %}
+            {% if object.author == user.profile %}
                 <a class = "btn btn-secondary btn-sm mt-1 mb-1" href="{% url "post-update" object.id %}">Edit ✏️</a>
                 <a class = "btn btn-danger btn-sm mt-1 mb-1" href="{% url "post-delete" object.id %}">Delete 🗑️</a>
             {% endif %}
@@ -34,7 +34,6 @@
       <img style="margin: auto; width: 80%;" src="{{post.image.url}}" class="post-image" width="60%" height="60%"/><br>
     {% endif %}
 
-    <!-- For post author -->
     
 
    <!-- Comments -->

@@ -3,6 +3,8 @@ from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from stream.models import Post 
+from django.shortcuts import render, get_object_or_404
+from .models import Profile
 '''
 messages.debug
 messages.info
@@ -26,7 +28,13 @@ def register(request):
     return render(request, 'users/register.html', {"form": form})
 
 @login_required
-def profile(request):
+def profile(request, id):
+    author = get_object_or_404(Profile, id=id)
+    return render(request, 'users/profile.html', {'author': author})
+    
+
+@login_required
+def profile_edit(request):
     if request.method == "POST":
         posts = Post.objects.filter()
         u_form = UserUpdateForm(request.POST, instance=request.user)
@@ -46,4 +54,4 @@ def profile(request):
         "p_form": p_form,
     }
 
-    return render(request, "users/profile.html", context)
+    return render(request, "users/profile_edit.html", context)
