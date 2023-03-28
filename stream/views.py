@@ -3,16 +3,15 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
-
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import JsonResponse
+
 
 def obtain_token(request):
     if request.method == 'GET':
@@ -138,7 +137,6 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         post.count += 1
         post.save()
         return super().form_valid(form)
-    
     
 @login_required
 def about(request):
