@@ -19,16 +19,10 @@ from users import views as user_views
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers, serializers, viewsets
-<<<<<<< HEAD
 from users.models import Profile, Inbox
 from stream.models import Post, Comment
 import uuid
-=======
-from users.models import Profile
-from stream.models import Post, Comment
 
-
->>>>>>> main
 # Author API
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -65,7 +59,6 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
 
-
 # Comment API
 class CommentSerializer(serializers.ModelSerializer):
     author = AuthorSerializer()
@@ -98,11 +91,6 @@ router = routers.DefaultRouter()
 router.register(r'authors', AuthorViewSet)
 router.register(r'posts', PostViewSet)
 router.register(r'comments', CommentViewSet)
-<<<<<<< HEAD
-
-=======
->>>>>>> main
-
 
 
 urlpatterns = [
@@ -111,14 +99,10 @@ urlpatterns = [
     path("login/", auth_views.LoginView.as_view(template_name="users/login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(template_name="users/logout.html"), name="logout"),
     path('profile/<uuid:id>/', user_views.profile, name='profile'),
-<<<<<<< HEAD
     path('profile/update.html', user_views.update, name="update"),
     path('profile/followers.html', user_views.followers, name="followers"),
     path('inbox/', user_views.inbox, name='inbox'),
     path('inbox/accept', user_views.accept, name='accept'),
-=======
-    path('profile/edit/', user_views.profile_edit, name="profile_edit"),
->>>>>>> main
     path("api/", include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace = 'rest_framework')),
     
