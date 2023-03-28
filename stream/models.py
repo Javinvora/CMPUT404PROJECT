@@ -2,13 +2,14 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+from users.models import Profile
 import uuid
 
 
 class Comment(models.Model):
     # In API
     type = "comment"
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     comment = models.TextField()
     contentType = models.TextField(default = "type placeholder")
     published = models.DateTimeField(auto_now_add=True)
@@ -32,7 +33,7 @@ class Post(models.Model):
     description = models.CharField(max_length=150, blank=True, null=True)
     contentType = models.CharField(max_length=150, blank=True, null=True)
     content = models.TextField()                               # TextField can have more than 255 characters
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     categories = models.CharField(max_length=50, blank=True, null=True)
     count = models.IntegerField(default=0)
     comments = models.ManyToManyField(Comment, blank=True)

@@ -53,7 +53,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
+        form.instance.author = self.request.user.profile
         return super().form_valid(form)
 
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
@@ -108,7 +108,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         post = get_object_or_404(Post, pk=self.kwargs['pk'])
         # Set post author to current login user
-        form.instance.author = self.request.user
+        form.instance.author = self.request.user.profile
         # Save the comment object
         response = super().form_valid(form)
         # Add the comment to the post's comments field

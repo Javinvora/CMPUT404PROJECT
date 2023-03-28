@@ -35,23 +35,11 @@ class AuthorViewSet(viewsets.ModelViewSet):
 
 # Comment API
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.SerializerMethodField()
+    author = AuthorSerializer()
 
     class Meta:
         model = Comment
         fields = ['type', 'author', 'comment', 'contentType', 'published', 'id']
-
-    def get_author(self, obj):
-        author = {
-            'type': 'author',
-            'id': f'http://127.0.0.1:5454/authors/{obj.author.id}',
-            'url': f'http://127.0.0.1:5454/authors/{obj.author.id}',
-            'host': 'http://127.0.0.1:5454/',
-            'displayName': obj.author.username,
-            'github': obj.author.profile.github,
-            'profileImage': obj.author.profile.profileImage.url if obj.author.profile.profileImage else '',
-        }
-        return author
         
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
@@ -59,24 +47,12 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 # Post API
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.SerializerMethodField()
+    author = AuthorSerializer()
     comments = CommentSerializer(many=True)
 
     class Meta:
         model = Post
         fields = ('id', 'author', 'title', 'source', 'origin', 'contentType', 'content', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted')
-
-    def get_author(self, obj):
-        author = {
-            'type': 'author',
-            'id': f'http://127.0.0.1:5454/authors/{obj.author.id}',
-            'url': f'http://127.0.0.1:5454/authors/{obj.author.id}',
-            'host': 'http://127.0.0.1:5454/',
-            'displayName': obj.author.username,
-            'github': obj.author.profile.github,
-            'profileImage': obj.author.profile.profileImage.url if obj.author.profile.profileImage else '',
-        }
-        return author
         
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()

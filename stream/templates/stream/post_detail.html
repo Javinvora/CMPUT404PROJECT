@@ -4,7 +4,7 @@
 <div class="card mb-3" style="box-shadow: 3px 3px 5px rgba(0,0,0,0.30);">
     <!-- Profile image, Name, Date Posted -->
    <div class="card-header" style="height: 80px; display: flex;">
-    <img class="rounded-circle article-img" style="width: 55px; height: 55px; margin-top: -4px; margin-left: 0px;" src="{{ post.author.profile.profileImage.url }}">
+    <img class="rounded-circle article-img" style="width: 55px; height: 55px; margin-top: -4px; margin-left: 0px;" src="{{ post.author.profileImage.url }}">
     <div style="display: flex; flex-direction: column; padding-top: -2px;">
     <a class="mr-3" style="text-decoration: none; font-size: 17px;" href="#">{{ post.author }}</a>
     <a class="mr-3" href="{% url 'post-detail' pk=post.id %}" style="text-decoration: none; color: grey; font-size: 13px">{{ post.published|timesince }} ago</a>
@@ -44,7 +44,7 @@
 
             <li class="list-group-item">
                 <div style="display: flex; flex-direction: row; margin-top: -6px; margin-bottom: -6px;">
-                <img class="rounded-circle article-img" style="width: 45px; height: 45px; ;" src="{{ comment.author.profile.profileImage.url }}">
+                <img class="rounded-circle article-img" style="width: 45px; height: 45px; ;" src="{{ comment.author.profileImage.url }}">
                 <div style="display: flex; flex-direction: column; padding-top: -2px;">
                 <a class="mr-3" style="display: flex; text-decoration: none; font-size: 15px;" href="#">{{ comment.author }}</a>
                 <div style="font-size: 15px">{{comment.comment}}</div>

@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+import uuid
 
 
 # Create your models here.
 class Profile(models.Model):
     # In API
     type='author'
-    id= models.CharField(max_length=100, primary_key=True)
+    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     host= models.CharField(max_length=100,default= 'localhost:8000/')
     displayName= models.CharField(max_length=100, blank=True, null=True)
     url= models.CharField(max_length=100,blank= True)
@@ -20,7 +21,7 @@ class Profile(models.Model):
 
 
     def __str__(self):
-        return f"{self.user.username} Profile"
+        return self.user.username
 
     # Run after model is saved
     def save(self, *args, **kwargs):
