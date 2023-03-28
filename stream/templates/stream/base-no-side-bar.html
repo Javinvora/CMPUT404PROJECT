@@ -36,9 +36,6 @@
                   <!-- Navbar Right Side -->
                   <div class="navbar-nav" style="margin-left: auto; margin-right: 5%;">
                     {% if user.is_authenticated%}
-                        {% if user.is_superuser %}
-                            <a style="color: white" class="nav-item nav-link" target="_blank" href="/admin">Admin Site</a>
-                        {% endif %}
                         <a style="color: white" class="nav-item nav-link" href="{% url "post-create" %}">New Post</a>
                         <a style="color: white" class="nav-item nav-link" href="{% url "profile"  %}">Profile</a>
                         <a style="color: white" class="nav-item nav-link" href="{% url "logout" %}">Logout</a>

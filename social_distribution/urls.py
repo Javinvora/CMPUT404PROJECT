@@ -22,6 +22,7 @@ from rest_framework import routers, serializers, viewsets
 from users.models import Profile
 from stream.models import Post, Comment
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenObtainPairView
 from stream import views
 
 # Author API
@@ -98,8 +99,9 @@ urlpatterns = [
     path('profile/', user_views.profile, name="profile"),
     path("api/", include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace = 'rest_framework')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('login/token/', views.obtain_token, name='token_obtain_pair'),
-    
+ 
     # Keep this at the bottom
     path("", include('stream.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
