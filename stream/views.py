@@ -120,4 +120,9 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     
 @login_required
 def about(request):
+<<<<<<< HEAD
     return render(request, "stream/about.html", {'title': 'About'})
+=======
+    return render(request, "stream/about.html", {'title': 'About'})
+
+>>>>>>> main

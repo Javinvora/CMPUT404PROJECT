@@ -1,5 +1,4 @@
 """social_distribution URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
 Examples:
@@ -20,9 +19,16 @@ from users import views as user_views
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers, serializers, viewsets
+<<<<<<< HEAD
 from users.models import Profile, Inbox
 from stream.models import Post, Comment
 import uuid
+=======
+from users.models import Profile
+from stream.models import Post, Comment
+
+
+>>>>>>> main
 # Author API
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -60,12 +66,42 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 
+# Comment API
+class CommentSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer()
+
+    class Meta:
+        model = Comment
+        fields = ['type', 'author', 'comment', 'contentType', 'published', 'id']
+        
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+# Post API
+class PostSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer()
+    comments = CommentSerializer(many=True)
+
+    class Meta:
+        model = Post
+        fields = ('id', 'author', 'title', 'source', 'origin', 'contentType', 'content', 'categories', 'count', 'comments', 'published', 'visibility', 'unlisted')
+        
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+
+
 # API router
 router = routers.DefaultRouter()
 router.register(r'authors', AuthorViewSet)
 router.register(r'posts', PostViewSet)
 router.register(r'comments', CommentViewSet)
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 
 
 
@@ -75,10 +111,14 @@ urlpatterns = [
     path("login/", auth_views.LoginView.as_view(template_name="users/login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(template_name="users/logout.html"), name="logout"),
     path('profile/<uuid:id>/', user_views.profile, name='profile'),
+<<<<<<< HEAD
     path('profile/update.html', user_views.update, name="update"),
     path('profile/followers.html', user_views.followers, name="followers"),
     path('inbox/', user_views.inbox, name='inbox'),
     path('inbox/accept', user_views.accept, name='accept'),
+=======
+    path('profile/edit/', user_views.profile_edit, name="profile_edit"),
+>>>>>>> main
     path("api/", include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace = 'rest_framework')),
     

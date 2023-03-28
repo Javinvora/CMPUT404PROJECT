@@ -3,10 +3,15 @@ from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from stream.models import Post 
+<<<<<<< HEAD
 from .models import FriendRequest, Inbox, Profile,Follower
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
+=======
+from django.shortcuts import render, get_object_or_404
+from .models import Profile
+>>>>>>> main
 '''
 messages.debug
 messages.info
@@ -34,6 +39,7 @@ def profile(request, id):
     author = get_object_or_404(Profile, id=id)
     return render(request, 'users/profile.html', {'author': author})
     
+<<<<<<< HEAD
 @login_required
 def followers(request):
     return render(request, "users/followers.html")
@@ -41,6 +47,11 @@ def followers(request):
 
 @login_required
 def update(request):
+=======
+
+@login_required
+def profile_edit(request):
+>>>>>>> main
     if request.method == "POST":
         posts = Post.objects.filter()
         u_form = UserUpdateForm(request.POST, instance=request.user)
@@ -60,6 +71,7 @@ def update(request):
         "p_form": p_form,
         }
 
+<<<<<<< HEAD
     return render(request, "users/update.html", context)
 
 @login_required
@@ -126,3 +138,6 @@ def accept(request):
                     inbox.delete()
 
     return render(request, 'users/inbox.html')
+=======
+    return render(request, "users/profile_edit.html", context)
+>>>>>>> main

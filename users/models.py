@@ -7,13 +7,14 @@ from django.utils import timezone
 
 
 
+
 # Create your models here.
 
 class Profile(models.Model):
     # In API
     type='author'
-    id= models.CharField(max_length=100, primary_key=True)
-    host= models.CharField(max_length=100,default= 'host.default')
+    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    host= models.CharField(max_length=100,default= 'localhost:8000/')
     displayName= models.CharField(max_length=100, blank=True, null=True)
     url= models.CharField(max_length=100,blank= True)
     github= models.CharField(max_length=100, blank=True, null=True)    
