@@ -48,7 +48,8 @@ def home(request):
     return render(request, "stream/home.html", context)
 
 # See if we can filter post here
-class PostForm(forms.ModelForm):
+@method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
+class PostForm(LoginRequiredMixin, forms.ModelForm):
     visibilityOptions = (
         ('public', 'Public'),
         ('private', 'Private'),
@@ -77,8 +78,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-
-class PostListView(ListView):
+@method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
+class PostListView(LoginRequiredMixin, ListView):
     model = Post
     template_name = "stream/home.html"
     context_object_name = "posts"
@@ -120,6 +121,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
 
+@method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     fields = ["comment"]
