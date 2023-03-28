@@ -56,15 +56,15 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-
-class PostListView(ListView):
+@method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
+class PostListView(LoginRequiredMixin, ListView):
     model = Post
     template_name = "stream/home.html"
     context_object_name = "posts"
     ordering = ['-published']
 
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
 
     
@@ -98,7 +98,8 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == post.author:
             return True
         return False
-
+    
+@method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     fields = ["comment"]
@@ -120,22 +121,4 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 @login_required
 def about(request):
     return render(request, "stream/about.html", {'title': 'About'})
-
-'''def post_liked(request, pk):
-    post = get_object_or_404(Post, id = request.POST.get('post_id'))
-    post.howManyLike.add(request.user)
-    return HttpResponseRedirect(reverse('post-detail', args = [str(pk)]))
-
-    mainuser = request.user
-    print(post.id)
-    if (request.method == 'GET'):
-        id_post = request.get('id_post')
-        post_post = Post.objects.get(id='id_post')
-
-        if mainuser in post_post.howManyLike.all():
-            post_post.remove(mainuser)
-        else:
-            post_post.add(mainuser)
-
-    return redirect('stream:stream-home')''' 
 
