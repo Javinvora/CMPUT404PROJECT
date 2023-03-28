@@ -1,4 +1,8 @@
 {% extends "stream/base-no-side-bar.html" %}
+<head>
+    <link rel="stylesheet" href="../CssStyle/Profile.css">
+</head>
+
 {% load crispy_forms_tags %}
 {% block content %}
     
@@ -10,15 +14,28 @@
             <div class="media-body">
                 <h2 class="account-heading"> {{ user.username}}'s Profile </h2>
                  <div class="d-flex justify-content-end">
-                    <a href="{% url 'update' %}"><button type="button" class="btn btn-outline-primary" data-mdb-ripple-color="dark">Edit Profile </button></a>
-                    <br>
-                    {% comment %} Once follow if clicked a friend request is sent {% endcomment %}
-                    <form method="POST" action="{% url 'inbox' %}">
-                     <input type="hidden" name="type" value="follow">
+                <a href="{% url 'update' %}">
+                    <button type="button" class="btn btn-outline-primary mx-2" data-mdb-ripple-color="dark">
+                        <i class="fas fa-edit"></i>
+                        Edit Profile
+                    </button>
+                </a>
+
+                <a href="{% url 'followers' %}">
+                    <button type="button" class="btn btn-outline-primary mx-2" data-mdb-ripple-color="dark">
+                        <i class="fas fa-users"></i>
+                        Followers
+                    </button>
+                </a>
+
+                <form method="POST" action="{% url 'inbox' %}">
+                    <input type="hidden" name="type" value="follow">
                     <input type="hidden" name="profile_id" value="{{user.profile.id}}">
-                    {% comment %} {% csrf_token %} {% endcomment %}
-                    <button type="submit" class="btn btn-primary mx-2">Follow</button>
-                    </form> 
+                    <button type="submit" class="btn btn-primary mx-2">
+                        <i class="fas fa-user-plus"></i>
+                        Follow
+                    </button>
+                </form> 
                 </div>
             </div>
         </div>

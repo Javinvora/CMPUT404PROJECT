@@ -73,6 +73,7 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(template_name="users/logout.html"), name="logout"),
     path('profile/', user_views.profile, name="profile"),
     path('profile/update.html', user_views.update, name="update"),
+    path('profile/followers.html', user_views.followers, name="followers"),
     path('inbox/', user_views.inbox, name='inbox'),
     path('inbox/accept', user_views.accept, name='accept'),
     path("api/", include(router.urls)),

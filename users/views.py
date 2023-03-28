@@ -34,6 +34,11 @@ def profile(request):
     return render(request, "users/profile.html")
 
 @login_required
+def followers(request):
+    return render(request, "users/followers.html")
+
+
+@login_required
 def update(request):
     if request.method == "POST":
         posts = Post.objects.filter()
@@ -83,23 +88,40 @@ def inbox(request):
 def accept(request):
     if request.method == 'POST':
         profile_id = request.POST.get('profile_id')
+        delete_request_id = request.POST.get('delete')
+        friend_request_id = request.POST.get('accept')
         friend_profile = get_object_or_404(Profile, id=profile_id)
         follows_profile = request.user.profile
-        #Add to follower model
-        follower = Follower.objects.create()
-        follower.items.set([friend_profile])
-        # Add the accepted profile to the list of followed profiles
-        follows_profile.follows.add(friend_profile) 
-        print(follows_profile.follows.all()) 
-         # delete friend request and inbox object
-          # Delete friend request and inbox object
-        friend_request = FriendRequest.objects.filter(actor=friend_profile, object=follows_profile).first()
-        if friend_request:
-            friend_request.delete()
-        inbox = Inbox.objects.filter(profile=follows_profile).first()
-        if inbox:
-            inbox.friend_requests.remove(friend_request)
-            if inbox.friend_requests.count() == 0:
-                inbox.delete()
-        messages.success(request, f"You are now friends with {friend_profile.user.username}!")
+
+        #accepts friend request
+        if friend_request_id:
+            #Add to follower model
+            follower = Follower.objects.create()
+            follower.items.set([friend_profile])
+            # Add the accepted profile to the list of followed profiles
+            follows_profile.follows.add(friend_profile) 
+            print(follows_profile.follows.all()) 
+            # delete friend request and inbox object
+            # Delete friend request and inbox object
+            friend_request = FriendRequest.objects.filter(actor=friend_profile, object=follows_profile).first()
+            if friend_request:
+                friend_request.delete()
+            inbox = Inbox.objects.filter(profile=follows_profile).first()
+            if inbox:
+                inbox.friend_requests.remove(friend_request)
+                if inbox.friend_requests.count() == 0:
+                    inbox.delete()
+            messages.success(request, f"You are now friends with {friend_profile.user.username}!")
+        
+        #deletes friend request
+        elif delete_request_id:
+            friend_request = FriendRequest.objects.filter(actor=friend_profile, object=follows_profile).first()
+            if friend_request:
+                friend_request.delete()
+            inbox = Inbox.objects.filter(profile=follows_profile).first()
+            if inbox:
+                inbox.friend_requests.remove(friend_request)
+                if inbox.friend_requests.count() == 0:
+                    inbox.delete()
+
     return render(request, 'users/inbox.html')
