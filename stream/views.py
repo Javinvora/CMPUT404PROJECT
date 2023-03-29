@@ -3,7 +3,6 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
 from django.urls import reverse_lazy, reverse 
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test, login_required

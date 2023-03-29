@@ -34,6 +34,7 @@ def profile(request, id):
     author = get_object_or_404(Profile, id=id)
     return render(request, 'users/profile.html', {'author': author})
     
+
 @login_required
 def followers(request):
     return render(request, "users/followers.html")
@@ -41,6 +42,7 @@ def followers(request):
 
 @login_required
 def update(request):
+
     if request.method == "POST":
         posts = Post.objects.filter()
         u_form = UserUpdateForm(request.POST, instance=request.user)
