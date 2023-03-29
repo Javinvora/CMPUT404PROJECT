@@ -22,7 +22,6 @@ from rest_framework import routers, serializers, viewsets
 from users.models import Profile, Inbox
 from stream.models import Post, Comment
 import uuid
-
 # Author API
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -59,6 +58,7 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
 
+
 # Comment API
 class CommentSerializer(serializers.ModelSerializer):
     author = AuthorSerializer()
@@ -91,6 +91,7 @@ router = routers.DefaultRouter()
 router.register(r'authors', AuthorViewSet)
 router.register(r'posts', PostViewSet)
 router.register(r'comments', CommentViewSet)
+
 
 
 urlpatterns = [
