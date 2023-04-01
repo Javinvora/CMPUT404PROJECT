@@ -29,11 +29,42 @@ def register(request):
 
     return render(request, 'users/register.html', {"form": form})
 
+# @login_required
+# def profile(request, id):
+#     author = get_object_or_404(Profile, id=id)
+#     return render(request, 'users/profile.html', {'author': author})
+
 @login_required
 def profile(request, id):
     author = get_object_or_404(Profile, id=id)
     return render(request, 'users/profile.html', {'author': author})
-    
+
+@login_required
+def user_profile(request, id):
+    author = get_object_or_404(Profile, id=id)
+    return render(request, 'users/user_link.html', {'author': author})
+
+
+@login_required
+def profile_edit(request, id):
+    if request.method == "POST":
+        posts = Post.objects.filter()
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if u_form.is_valid and p_form.is_valid:
+            u_form.save()
+            p_form.save()
+            messages.success(request, f"Your profile has been updated!")
+            return redirect(profile, id)
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        "u_form": u_form,
+        "p_form": p_form,
+    }
+
 
 @login_required
 def followers(request):
@@ -65,7 +96,6 @@ def update(request):
     return render(request, "users/update.html", context)
 
 @login_required
-@csrf_exempt
 def inbox(request):
     context={}
     if request.method == "POST":        

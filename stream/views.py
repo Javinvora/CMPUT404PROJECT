@@ -62,6 +62,13 @@ class PostListView(LoginRequiredMixin, ListView):
     context_object_name = "posts"
     ordering = ['-published']
 
+    def get_queryset(self):
+        # Get the value of the radio button from the GET request
+        queryset = Post.objects.filter(visibility='public')
+        # Order the queryset by published date
+        queryset = queryset.order_by('-published')
+        return queryset
+
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
@@ -74,7 +81,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     # Set post author to current login user
     def form_valid(self, form):
-        form.instance.author = self.request.user
+        form.instance.author = self.request.user.profile
         return super().form_valid(form)
     
     # Check if user browsing the post is the author

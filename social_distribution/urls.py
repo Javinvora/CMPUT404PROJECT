@@ -100,6 +100,8 @@ urlpatterns = [
     path("login/", auth_views.LoginView.as_view(template_name="users/login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(template_name="users/logout.html"), name="logout"),
     path('profile/<uuid:id>/', user_views.profile, name='profile'),
+    path('profile/view/<uuid:id>/', user_views.user_profile, name='user_profile'),
+    path('profile/edit/<uuid:id>/', user_views.profile_edit, name="profile_edit"),
     path('profile/update.html', user_views.update, name="update"),
     path('profile/followers.html', user_views.followers, name="followers"),
     path('inbox/', user_views.inbox, name='inbox'),
