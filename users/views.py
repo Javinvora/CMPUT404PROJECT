@@ -68,10 +68,8 @@ def profile_edit(request, id):
 
 @login_required
 def followers(request):
-    print(request.user.profile)
     profile = request.user.profile
     followers = profile.followers.all()
-    print(followers)
     return render(request, 'users/followers.html', {'followers': followers})
 
 
@@ -159,10 +157,7 @@ def accept(request, id):
         
         #deletes friend request
         elif delete_request_id:
-            print(friend_profile)
-            print(follows_profile)
             friend_request = FriendRequest.objects.filter(actor=friend_profile, object=follows_profile).first()
-            print(friend_request)
             if friend_request:
                 friend_request.delete()
             inbox = Inbox.objects.filter(profile=follows_profile).first()
