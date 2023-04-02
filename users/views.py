@@ -102,8 +102,8 @@ def inbox(request):
         request_type = request.POST.get('type')
         if request_type == 'follow':           
             profile_id = request.POST.get('profile_id')
-            actor= Profile.objects.get(pk=profile_id)
-            object= Profile.objects.get(pk=request.user.profile.id)
+            actor= Profile.objects.get(pk=request.user.profile.id)
+            object = Profile.objects.get(pk=profile_id)
             summary=  f"{actor} wants to follow {object}"
             friend_request= FriendRequest.objects.create(summary=summary, actor = actor, object= object)
             inbox = Inbox.objects.create(profile=object)

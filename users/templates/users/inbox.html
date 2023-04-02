@@ -3,7 +3,8 @@
 {% block content %}
   <h2>Inbox</h2>
   {% if request.user.profile.inbox.all %}
-    {% for friend_request in request.user.profile.inbox.all.first.friend_requests.all %}
+    {% for message in request.user.profile.inbox.all %}
+    {% for friend_request in message.friend_requests.all %}
       <div class="card mb-3">
         <div class="card-body">
           <h5 class="card-title">{{ friend_request.type }} request:</h5>
@@ -18,6 +19,7 @@
           </form>
         </div>
       </div>
+    {% endfor %}
     {% endfor %}
   {% else %}
     <p>You have no friend requests</p>
