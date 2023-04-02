@@ -12,22 +12,6 @@
             <div class="media-body">
                 <!-- <h2 class="account-heading"> {{ user.username}}'s Profile </h2> -->
                 <h2 class="account-heading"> {{ author.displayName }}'s Profile </h2>
-                
-                <!-- <div class="d-flex justify-content-end"> -->
-                <!-- <a href="{% url 'update' %}">
-                    <button type="button" class="btn btn-outline-primary  mx-2" data-mdb-ripple-color="dark">
-                        Edit Profile
-                    </button>
-                </a>
-
-                <a href="{% url 'followers' %}">
-                    <button type="button" class="btn btn-outline-primary mx-2" data-mdb-ripple-color="dark">
-                        <i class="fas fa-users"></i>
-                        Followers
-                    </button>
-                </a> -->
-                {{ author }}
-                {{ user }}
                 {% if user == author %}
                 <div class="d-flex justify-content-end">
                     <a href="{% url 'update' %}">

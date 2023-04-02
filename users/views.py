@@ -112,7 +112,7 @@ def inbox(request):
                 "summary": summary,
                 "username": actor,
             }
-            return redirect(profile,profile_id)
+            return redirect(user_profile,profile_id)
     else:
             return render(request, 'users/inbox.html',context)
 
