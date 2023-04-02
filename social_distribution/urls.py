@@ -105,7 +105,7 @@ urlpatterns = [
     path('profile/update.html', user_views.update, name="update"),
     path('profile/followers.html', user_views.followers, name="followers"),
     path('inbox/', user_views.inbox, name='inbox'),
-    path('inbox/accept', user_views.accept, name='accept'),
+    path('inbox/accept/<uuid:id>', user_views.accept, name='accept'),
     path("api/", include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace = 'rest_framework')),
     

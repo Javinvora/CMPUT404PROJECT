@@ -118,18 +118,26 @@ def inbox(request):
 
 @login_required
 @csrf_exempt        
-def accept(request):
+
+def accept(request, id):
     if request.method == 'POST':
-        profile_id = request.POST.get('profile_id')        
+        # profile_id = request.POST.get('profile_id')    
+        # friend_request = FriendRequest.objects.get_or_create(id=id)
+        friend_request = get_object_or_404(FriendRequest, id=id)
+        print(friend_request)
+        friend_profile = friend_request.actor
+        # friend_profile = request.user.profile
+        print(friend_profile)
         delete_request_id = request.POST.get('delete')
         friend_request_id = request.POST.get('accept')
-        friend_profile = get_object_or_404(Profile, id=profile_id)
+        # friend_profile = get_object_or_404(Profile, id=profile_id)
         follows_profile = request.user.profile
 
         #accepts friend request
         if friend_request_id:
             #Add to follower model
             follower = Follower.objects.create()
+
             follower.items.set([friend_profile])
             # Add the accepted profile to the list of followed profiles
             follows_profile.follows.add(friend_profile) 
@@ -137,6 +145,7 @@ def accept(request):
             # delete friend request and inbox object
             # Delete friend request and inbox object
             friend_request = FriendRequest.objects.filter(actor=friend_profile, object=follows_profile).first()
+            print(friend_request)
             if friend_request:
                 friend_request.delete()
             inbox = Inbox.objects.filter(profile=follows_profile).first()
@@ -148,7 +157,10 @@ def accept(request):
         
         #deletes friend request
         elif delete_request_id:
+            print(friend_profile)
+            print(follows_profile)
             friend_request = FriendRequest.objects.filter(actor=friend_profile, object=follows_profile).first()
+            print(friend_request)
             if friend_request:
                 friend_request.delete()
             inbox = Inbox.objects.filter(profile=follows_profile).first()
@@ -156,5 +168,14 @@ def accept(request):
                 inbox.friend_requests.remove(friend_request)
                 if inbox.friend_requests.count() == 0:
                     inbox.delete()
+        
+        # Get the updated friend requests after accepting or deleting a request
+        friend_requests = FriendRequest.objects.filter(object=request.user.profile)
+        context = {
+            'friend_requests': friend_requests,
+        }
+        return render(request, 'users/inbox.html', context)
+            
+    # Redirect to inbox after processing the request
+    return redirect('inbox')
 
-    return render(request, 'users/inbox.html')

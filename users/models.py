@@ -48,6 +48,7 @@ class FriendRequest(models.Model):
     summary= models.CharField(max_length=500, blank= True, null= True)
     actor= models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='actor')
     object= models.ForeignKey(Profile,on_delete=models.CASCADE, related_name='object')
+    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     
 class Inbox(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='inbox')

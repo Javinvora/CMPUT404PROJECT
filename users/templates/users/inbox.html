@@ -9,7 +9,7 @@
         <div class="card-body">
           <h5 class="card-title">{{ friend_request.type }} request:</h5>
           <p class="card-text">{{ friend_request.actor }} wants to follow you</p>
-            <form method="POST" action="{% url 'accept'%}">
+            <form method="POST" action="{% url 'accept' id=friend_request.id %}">
             <input type="hidden" name="profile_id" value="{{user.profile.id}}">
             {% csrf_token %}
             <div class="btn-group" role="group">
