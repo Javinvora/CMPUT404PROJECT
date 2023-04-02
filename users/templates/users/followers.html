@@ -2,5 +2,9 @@
 
 {% block content %}
 <h1>Followers</h1>
-
+<ul>
+    {% for follower in followers %}
+      <li>{{ follower.user.username }}</li>
+    {% endfor %}
+</ul>
 {% endblock content %}

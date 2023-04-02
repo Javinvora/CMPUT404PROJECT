@@ -22,7 +22,7 @@ class Profile(models.Model):
     
     # Not in API
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    follows = models.ManyToManyField('self', related_name="followed_by", symmetrical= False, blank= True )
+    followers = models.ManyToManyField('self', related_name="followed_by", symmetrical= False, blank= True )
 
 
     def __str__(self):

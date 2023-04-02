@@ -68,7 +68,13 @@ def profile_edit(request, id):
 
 @login_required
 def followers(request):
-    return render(request, "users/followers.html")
+    print(request.user.profile)
+    profile = request.user.profile
+    followers = profile.followers.all()
+    print(followers)
+    return render(request, 'users/followers.html', {'followers': followers})
+
+
 
 
 @login_required
@@ -124,10 +130,8 @@ def accept(request, id):
         # profile_id = request.POST.get('profile_id')    
         # friend_request = FriendRequest.objects.get_or_create(id=id)
         friend_request = get_object_or_404(FriendRequest, id=id)
-        print(friend_request)
         friend_profile = friend_request.actor
         # friend_profile = request.user.profile
-        print(friend_profile)
         delete_request_id = request.POST.get('delete')
         friend_request_id = request.POST.get('accept')
         # friend_profile = get_object_or_404(Profile, id=profile_id)
@@ -140,12 +144,10 @@ def accept(request, id):
 
             follower.items.set([friend_profile])
             # Add the accepted profile to the list of followed profiles
-            follows_profile.follows.add(friend_profile) 
-            print(follows_profile.follows.all()) 
+            follows_profile.followers.add(friend_profile) 
             # delete friend request and inbox object
             # Delete friend request and inbox object
             friend_request = FriendRequest.objects.filter(actor=friend_profile, object=follows_profile).first()
-            print(friend_request)
             if friend_request:
                 friend_request.delete()
             inbox = Inbox.objects.filter(profile=follows_profile).first()
