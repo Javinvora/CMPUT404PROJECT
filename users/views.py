@@ -72,6 +72,23 @@ def followers(request):
     followers = profile.followers.all()
     return render(request, 'users/followers.html', {'followers': followers})
 
+@login_required
+def following(request):
+    profile = request.user.profile
+    following = profile.following.all()
+    return render(request, 'users/following.html', {'following': following})
+
+def true_friend(request):
+    user = request.user.profile
+    following = user.following.all()
+    followers = user.followers.all()
+    true_friends = []
+    for follow in following:
+        for each in followers:
+            if (follow == each):
+                true_friends.append(follow)
+    print(true_friends)
+    return render(request, 'users/truefriends.html', {'true_friends': true_friends})
 
 
 
@@ -143,6 +160,7 @@ def accept(request, id):
             follower.items.set([friend_profile])
             # Add the accepted profile to the list of followed profiles
             follows_profile.followers.add(friend_profile) 
+            friend_profile.following.add(follows_profile)
             # delete friend request and inbox object
             # Delete friend request and inbox object
             friend_request = FriendRequest.objects.filter(actor=friend_profile, object=follows_profile).first()

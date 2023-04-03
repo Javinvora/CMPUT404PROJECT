@@ -27,6 +27,20 @@
                     </button>
                 </a>
 
+                <a href="{% url 'following' %}">
+                    <button type="button" class="btn btn-outline-primary mx-2" data-mdb-ripple-color="dark">
+                        <i class="fas fa-users"></i>
+                        Following
+                    </button>
+                </a>
+
+                <a href="{% url 'truefriends' %}">
+                    <button type="button" class="btn btn-outline-primary mx-2" data-mdb-ripple-color="dark">
+                        <i class="fas fa-users"></i>
+                        True Friends
+                    </button>
+                </a>
+
                 
                 <!-- <form method="POST" action="{% url 'inbox' %}">
                     {% csrf_token %}

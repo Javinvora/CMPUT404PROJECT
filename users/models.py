@@ -23,6 +23,8 @@ class Profile(models.Model):
     # Not in API
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     followers = models.ManyToManyField('self', related_name="followed_by", symmetrical= False, blank= True )
+    following = models.ManyToManyField('self', related_name="follows", symmetrical= False, blank= True )
+
 
 
     def __str__(self):
@@ -41,6 +43,7 @@ class Profile(models.Model):
 class Follower(models.Model):
     type='followers'
     items = models.ManyToManyField(Profile, related_name='user_follower')
+
        
    
 class FriendRequest(models.Model):
