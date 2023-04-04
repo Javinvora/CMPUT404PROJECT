@@ -2,16 +2,13 @@
 <!DOCTYPE html>
 <html>
     <script>
-        fetch("https://cors-anywhere.herokuapp.com/https://social-distribution-8.herokuapp.com/api/posts/", {
+        response = fetch("https://social-distribution-8.herokuapp.com/api/", {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors'
+            headers: { 'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'},
         })
         .then(response => response.json())
         .then(data => console.log(data))
-        .catch(error => console.error(error));
 
     </script>
 
