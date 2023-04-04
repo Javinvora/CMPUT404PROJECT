@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
@@ -89,6 +90,23 @@ def true_friend(request):
                 true_friends.append(follow)
     print(true_friends)
     return render(request, 'users/truefriends.html', {'true_friends': true_friends})
+
+def searchUser(request):
+    if request.method == 'POST':
+        search_text = request.POST['search_text']
+        try:
+            user = Profile.objects.get(displayName =search_text)
+            print(user)
+            return redirect(reverse('user_profile', args=[user.id]))
+            # return redirect('users/user_profile', user_id=user.id)
+        except Profile.DoesNotExist:
+            error_message = "User not found!!!"
+            return render(request, 'users/search.html', {'error_message': error_message})
+    else:
+        error_message = ""
+        return render(request, 'users/search.html', {'error_message': error_message})
+
+
 
 
 

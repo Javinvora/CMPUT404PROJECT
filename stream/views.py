@@ -54,6 +54,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user.profile
         return super().form_valid(form)
+    
+
 
 @method_decorator(login_required(login_url=reverse_lazy('welcome')), name='dispatch')
 class PostListView(LoginRequiredMixin, ListView):

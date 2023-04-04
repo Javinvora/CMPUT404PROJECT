@@ -106,6 +106,7 @@ urlpatterns = [
     path('profile/followers.html', user_views.followers, name="followers"),
     path('profile/following.html', user_views.following, name="following"),
     path('profile/truefriends.html', user_views.true_friend, name="truefriends"),
+    path('search/',user_views.searchUser ,name = "searchuser"),
     path('inbox/', user_views.inbox, name='inbox'),
     path('inbox/accept/<uuid:id>', user_views.accept, name='accept'),
     path("api/", include(router.urls)),
