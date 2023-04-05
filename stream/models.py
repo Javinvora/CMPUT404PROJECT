@@ -16,7 +16,7 @@ class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     
     def __str__(self):
-        return '%s  : %s' % (self.comment)
+        return '%s' % (self.comment)
     
     def get_absolute_url(self):
         return reverse("stream-home")
