@@ -55,4 +55,78 @@
    </div>
 </div>
 {% endfor %}
+<div>
+  <h1 style="color: light blue; font-size: 32px; text-align: center; text-decoration: underline;  border: 2px solid black; background-color: lightgray;">List of all the foreign posts:</h1>
+  <br>
+</div>
+<div id="posts-container"></div>
+
+        <script>
+            fetch("https://social-distribution-8.herokuapp.com/api/posts/", {
+            method: 'GET',
+            headers: { 
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            })
+            .then(response => response.json())
+            .then(posts => {
+            const postsContainer = document.getElementById('posts-container');
+
+            posts.forEach(post => {
+                const name = document.createElement('h2');
+                name.textContent = post.author.displayName;
+                name.style.textAlign = 'justify'; // Add style to content element
+                name.style.backgroundColor = 'lightgrey';
+                const date = document.createElement('h3');
+                date.textContent = post.published;
+                date.style.fontSize = '15px'; // Add style to title element
+                const postDiv = document.createElement('div');
+                const title = document.createElement('h3');
+                title.textContent = post.title;
+                title.style.fontSize = '20px'; // Add style to title element
+                const content = document.createElement('h4');
+                content.textContent = post.content;
+                content.style.textAlign = 'justify'; // Add style to content element
+                content.style.fontSize = '18px'; // Add style to title element
+
+                postDiv.appendChild(name);
+                postDiv.appendChild(date);
+                postDiv.appendChild(title);
+                postDiv.appendChild(content);
+
+                const comment = document.createElement('h4');
+                if (post.comments && post.comments.length > 0) {
+                  const commentName = document.createElement('h3');
+                  commentName.textContent = post.comments[0].author.displayName;
+                  commentName.style.textAlign = 'justify'; // Add style to content element
+                  commentName.style.fontSize = '15px'; // Add style to title element
+                  commentName.style.backgroundColor = 'lightblue';
+
+                  const commentContent = document.createElement('h3');
+                  commentContent.textContent = post.comments[0].comment;
+                  commentContent.style.textAlign = 'justify'; // Add style to content element
+                  commentContent.style.fontSize = '13px'; // Add style to title element
+                  commentContent.style.backgroundColor = 'lightblue';
+
+                  const commentPublished = document.createElement('h3');
+                  commentPublished.textContent = post.comments[0].published;
+                  commentPublished.style.textAlign = 'justify'; // Add style to content element
+                  commentPublished.style.fontSize = '10px'; // Add style to title element
+                  commentPublished.style.backgroundColor = 'lightblue';
+
+                  postDiv.appendChild(commentName);
+                  postDiv.appendChild(commentContent);
+                  postDiv.appendChild(commentPublished);
+
+
+                }
+                postDiv.style.boxShadow = '3px 3px 5px rgba(0,0,0,0.30)'; // Add style to postDiv element
+                postDiv.style.marginBottom = '10px'; // Add style to postDiv element
+
+                postsContainer.appendChild(postDiv);
+            });
+            });
+        </script>
 {% endblock content %}
+

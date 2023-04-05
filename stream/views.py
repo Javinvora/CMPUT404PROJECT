@@ -21,8 +21,9 @@ def welcome(request):
 @login_required
 def home(request):
     context = {
-        "posts": Post.objects.all()
+        "posts": Post.objects.all(), 
     }
+    print(context)
     return render(request, "stream/home.html", context)
 
 # See if we can filter post here
